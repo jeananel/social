@@ -3,13 +3,13 @@ package main
 import (
 	"log"
 
-	"github.com/jeananel/social/bd"
-	"github.com/jeananel/social/handlers"
+	"github.com/jeananel/social.git/bd"
+	"github.com/jeananel/social.git/handlers"
 )
 
 func main() {
 
-	if bd.CheckConnection() {
+	if !bd.CheckConnection() {
 		log.Fatal("Dont connect. Error.")
 		return
 	}
