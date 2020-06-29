@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/jeananel/social.git/models"
+	"github.com/jeananel/social.git/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -20,10 +21,8 @@ func InsertRegister(object models.User) (string, bool, error) {
 	collection := db.Collection("Users")
 
 	//Set password encrypted
-	passWordEncrypted, _ := EcryptPass(object.Password)
+	passWordEncrypted, _ := utils.EcryptPasswordUtil(object.Password)
 	object.Password = passWordEncrypted
-
-	//passWordEncrypted2, _ := EcryptPasswordUtil(object.Password)
 
 	result, err := collection.InsertOne(ctx, object)
 
