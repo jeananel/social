@@ -13,5 +13,6 @@ func main() {
 		log.Fatal("Dont connect. Error.")
 		return
 	}
+
 	handlers.Managements()
 }

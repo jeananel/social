@@ -1,4 +1,4 @@
-module https: //github.com/jeananel/social.git
+module github.com/jeananel/social.git
 
 go 1.13
 
