@@ -8,6 +8,7 @@ import (
 	"github.com/jeananel/social.git/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"golang.org/x/crypto/bcrypt"
 )
 
 //InsertRegister for register account
@@ -39,7 +40,7 @@ func InsertRegister(object models.User) (string, bool, error) {
 }
 
 //CheckExistUser for check user in database
-func CheckExistUser(email string) (models.User, bool, string, error) {
+func CheckExistUser(email string) (models.User, bool, string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 
 	//When end instruction remove timeout operation and liberate context
@@ -57,9 +58,30 @@ func CheckExistUser(email string) (models.User, bool, string, error) {
 	ID := result.ID.Hex()
 
 	if err != nil {
-		return result, false, ID, err
+		return result, false, ID
 	}
 
-	return result, true, ID, err
+	return result, true, ID
 
+}
+
+//TryLoginUser for check usuario login
+func TryLoginUser(email string, password string) (models.User, bool) {
+
+	user, founded, _ := CheckExistUser(email)
+
+	if !founded {
+		return user, false
+	}
+
+	passwordBytes := []byte(password)     //Password login
+	passwordUser := []byte(user.Password) //Password user
+
+	err := bcrypt.CompareHashAndPassword(passwordUser, passwordBytes)
+
+	if err != nil {
+		return user, false
+	}
+
+	return user, true
 }

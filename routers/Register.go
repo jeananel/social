@@ -27,10 +27,10 @@ func Register(write http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	_, userFounded, _, err := bd.CheckExistUser(object.Email)
+	_, userFounded, _ := bd.CheckExistUser(object.Email)
 
 	if userFounded {
-		http.Error(write, "The email has already been registered."+err.Error(), 400)
+		http.Error(write, "The email has already been registered.", 400)
 		return
 	}
 
