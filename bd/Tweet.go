@@ -90,17 +90,19 @@ func DeleteTweet(ID string, UserID string) error {
 }
 
 /*GetTweetsFollowes tweets of followers */
-func GetTweetsFollowes(ID string, pagina int) ([]models.TweetsFollowers, bool) {
+func GetTweetsFollowes(ID string, page int) ([]models.TweetsFollowers, bool) {
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	db := MongoConnection.Database("socialnetwork")
 	collection := db.Collection("UsersFollowers")
 
-	skip := (pagina - 1) * 20
+	//Paginate
+	skip := (page - 1) * 20
 
 	//Math between tables
-	conditions := make([]bson.M, 0)
+	conditions := make([]bson.M, 0) //Initial slice
+
 	conditions = append(conditions, bson.M{"$match": bson.M{"UserID": ID}})
 
 	//Unions tables relations

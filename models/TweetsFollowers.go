@@ -9,5 +9,5 @@ type TweetsFollowers struct {
 	ID         primitive.ObjectID `bson:"_id" json:"_id,omitempty"`
 	UserID     string             `bson:"UserID" json:"UserID,omitempty"`
 	FollowerID string             `bson:"FollowerID" json:"FollowerID,omitempty"`
-	Tweet      Tweet
+	Tweets     Tweet
 }
