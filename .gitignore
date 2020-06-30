@@ -4,5 +4,6 @@
 #Uploads files images
 upload/
 
-#Compile app
-.exe
+# Compiled source #
+###################
+*.exe
