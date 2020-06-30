@@ -22,6 +22,7 @@ func Managements() {
 	router.HandleFunc("/UpdateProfile", middleware.CheckConnectionToDatabase(middleware.ValidationToken(routers.UpdateProfile))).Methods("PUT")
 	router.HandleFunc("/SaveTweet", middleware.CheckConnectionToDatabase(middleware.ValidationToken(routers.SaveTweet))).Methods("POST")
 	router.HandleFunc("/GetTweets", middleware.CheckConnectionToDatabase(middleware.ValidationToken(routers.GetTweets))).Methods("GET")
+	router.HandleFunc("/RemoveTweet", middleware.CheckConnectionToDatabase(middleware.ValidationToken(routers.RemoveTweet))).Methods("DELETE")
 
 	PORT := os.Getenv("PORT")
 

@@ -73,3 +73,21 @@ func GetTweets(write http.ResponseWriter, request *http.Request) {
 	write.WriteHeader(http.StatusCreated)
 	json.NewEncoder(write).Encode(respuesta)
 }
+
+/*RemoveTweet remove tweet by id and userID */
+func RemoveTweet(write http.ResponseWriter, request *http.Request) {
+	ID := request.URL.Query().Get("id")
+	if len(ID) < 1 {
+		http.Error(write, "Parameter ID is required", http.StatusBadRequest)
+		return
+	}
+
+	err := bd.DeleteTweet(ID, IDUser)
+	if err != nil {
+		http.Error(write, "An error ocurred while tried deleted tweet "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	write.Header().Set("Content-type", "application/json")
+	write.WriteHeader(http.StatusCreated)
+}
