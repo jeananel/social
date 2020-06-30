@@ -42,7 +42,7 @@ func SaveTweet(write http.ResponseWriter, request *http.Request) {
 
 }
 
-/*GetTweets Leo los tweets */
+/*GetTweets get tweets of user */
 func GetTweets(write http.ResponseWriter, request *http.Request) {
 
 	ID := request.URL.Query().Get("id")

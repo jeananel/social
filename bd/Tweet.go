@@ -11,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-/*InsertTweet graba el Tweet en la BD */
+/*InsertTweet save user tweet in database */
 func InsertTweet(t models.Tweet) (string, bool, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
@@ -33,7 +33,7 @@ func InsertTweet(t models.Tweet) (string, bool, error) {
 	return objID.String(), true, nil
 }
 
-/*GetTweets lee los tweets de un perfil */
+/*GetTweets get tweets of user in session */
 func GetTweets(ID string, pagina int64) ([]*models.Tweet, bool) {
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
@@ -70,7 +70,7 @@ func GetTweets(ID string, pagina int64) ([]*models.Tweet, bool) {
 	return results, true
 }
 
-/*DeleteTweet borra un tweet determinado */
+/*DeleteTweet delete tweet by ID */
 func DeleteTweet(ID string, UserID string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15)
 	defer cancel()
