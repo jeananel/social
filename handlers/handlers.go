@@ -24,6 +24,12 @@ func Managements() {
 	router.HandleFunc("/GetTweets", middleware.CheckConnectionToDatabase(middleware.ValidationToken(routers.GetTweets))).Methods("GET")
 	router.HandleFunc("/RemoveTweet", middleware.CheckConnectionToDatabase(middleware.ValidationToken(routers.RemoveTweet))).Methods("DELETE")
 
+	//Management files in server routes
+	router.HandleFunc("/UploadAvatar", middleware.CheckConnectionToDatabase(middleware.ValidationToken(routers.UploadAvatar))).Methods("POST")
+	router.HandleFunc("/UploadBanner", middleware.CheckConnectionToDatabase(middleware.ValidationToken(routers.UploadBanner))).Methods("POST")
+	router.HandleFunc("/GetFileAvatar", middleware.CheckConnectionToDatabase(routers.GetFileAvatar)).Methods("GET")
+	router.HandleFunc("/GetFileBanner", middleware.CheckConnectionToDatabase(routers.GetFileBanner)).Methods("GET")
+
 	PORT := os.Getenv("PORT")
 
 	if PORT == "" {

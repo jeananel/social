@@ -1,6 +1,8 @@
 package utils
 
-import "golang.org/x/crypto/bcrypt"
+import (
+	"golang.org/x/crypto/bcrypt"
+)
 
 //EcryptPasswordUtil for encript password
 func EcryptPasswordUtil(password string) (string, error) {
