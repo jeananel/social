@@ -85,3 +85,50 @@ func TryLoginUser(email string, password string) (models.User, bool) {
 
 	return user, true
 }
+
+//UpdateUser for update user profile
+func UpdateUser(u models.User, ID string) (bool, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+
+	db := MongoConnection.Database("socialnetwork")
+	collection := db.Collection("Users")
+
+	object := make(map[string]interface{})
+	if len(u.Name) > 0 {
+		object["Name"] = u.Name
+	}
+	if len(u.LastName) > 0 {
+		object["LastName"] = u.LastName
+	}
+	object["DateBirth"] = u.DateBirth
+	if len(u.Avatar) > 0 {
+		object["Avatar"] = u.Avatar
+	}
+	if len(u.Banner) > 0 {
+		object["Banner"] = u.Banner
+	}
+	if len(u.Biography) > 0 {
+		object["Biography"] = u.Biography
+	}
+	if len(u.Location) > 0 {
+		object["Location"] = u.Location
+	}
+	if len(u.WebSite) > 0 {
+		object["WebSite"] = u.WebSite
+	}
+
+	updtString := bson.M{
+		"$set": object,
+	}
+
+	objID, _ := primitive.ObjectIDFromHex(ID)
+	filter := bson.M{"_id": bson.M{"$eq": objID}}
+
+	_, err := collection.UpdateOne(ctx, filter, updtString)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
