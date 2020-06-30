@@ -3,3 +3,6 @@
 
 #Uploads files images
 upload/
+
+#Compile app
+.exe
