@@ -8,6 +8,7 @@ import (
 	"github.com/jeananel/social.git/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -37,6 +38,83 @@ func InsertRegister(object models.User) (string, bool, error) {
 	//Return created object id
 	return ObjectID.String(), true, nil
 
+}
+
+/*GetUsers Get users  relations followers, following */
+func GetUsers(ID string, page int64, search string, tipo string) ([]*models.User, bool) {
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+
+	db := MongoConnection.Database("socialnetwork")
+	collection := db.Collection("Users")
+
+	var results []*models.User
+
+	findOptions := options.Find()
+	findOptions.SetSkip((page - 1) * 20)
+	findOptions.SetLimit(20)
+
+	query := bson.M{
+		"Name": bson.M{"$regex": `(?i)` + search},
+	}
+
+	cursor, err := collection.Find(ctx, query, findOptions)
+	if err != nil {
+		return results, false
+	}
+
+	var found, flagInclude bool
+
+	for cursor.Next(ctx) {
+		var userObj models.User
+		err := cursor.Decode(&userObj)
+		if err != nil {
+			return results, false
+		}
+
+		var userFollowerObj models.UsersFollowers
+		userFollowerObj.UserID = ID
+
+		userFollowerObj.FollowerID = userObj.ID.Hex()
+
+		flagInclude = false
+
+		found, err = CheckFollowing(userFollowerObj)
+
+		//New users without relations. Users not following
+		if tipo == "new" && found == false {
+			flagInclude = true
+		}
+
+		//User following
+		if tipo == "follow" && found == true {
+			flagInclude = true
+		}
+
+		//Validation IDs not sames
+		if userFollowerObj.FollowerID == ID {
+			flagInclude = false
+		}
+
+		if flagInclude == true {
+			//Clean values that not used
+			userObj.Password = ""
+			userObj.Biography = ""
+			userObj.WebSite = ""
+			userObj.Location = ""
+			userObj.Banner = ""
+			userObj.Email = ""
+
+			results = append(results, &userObj)
+		}
+	}
+
+	err = cursor.Err()
+	if err != nil {
+		return results, false
+	}
+	cursor.Close(ctx)
+	return results, true
 }
 
 //CheckExistUser for check user in database

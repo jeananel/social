@@ -91,3 +91,30 @@ func RemoveTweet(write http.ResponseWriter, request *http.Request) {
 	write.Header().Set("Content-type", "application/json")
 	write.WriteHeader(http.StatusCreated)
 }
+
+/*GetTweetsFollowes get tweets of followers */
+func GetTweetsFollowes(write http.ResponseWriter, response *http.Request) {
+
+	if len(response.URL.Query().Get("page")) < 1 {
+		http.Error(write, "Page parameter is required", http.StatusBadRequest)
+		return
+	}
+
+	page, err := strconv.Atoi(response.URL.Query().Get("page"))
+
+	if err != nil {
+		http.Error(write, "Page value should be greater than 0", http.StatusBadRequest)
+		return
+	}
+
+	result, isOk := bd.GetTweetsFollowes(IDUser, page)
+
+	if isOk == false {
+		http.Error(write, "Error read tweets of followers", http.StatusBadRequest)
+		return
+	}
+
+	write.Header().Set("Content-Type", "application/json")
+	write.WriteHeader(http.StatusCreated)
+	json.NewEncoder(write).Encode(result)
+}
